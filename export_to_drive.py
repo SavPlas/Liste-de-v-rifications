@@ -1,5 +1,5 @@
 import streamlit as st
-
+st.set_page_config(layout="centered")
 
 from checklist_personnalisee import app_generer_liste_verification
 from export_to_drive import export_resume_to_google_doc
@@ -11,7 +11,8 @@ infos_generales = {
     "Professeur-organisateur": st.text_input("Professeur-organisateur", "CUISAL")
 }
 
-
+# Appel de la checklist
+app_generer_liste_verification()
 
 # Interface pour ajouter dynamiquement des items
 st.markdown("---")
@@ -30,15 +31,27 @@ if st.button("Ajouter l'item") and nouvel_item and details_item:
 # Affichage du résumé et export
 if "resultats_checklist" in st.session_state:
     resume_lines = []
+    resume_lines.append(f"**Intitulé du voyage** : {infos_generales['Intitulé du voyage']}")
+    resume_lines.append(f"**Code régie** : {infos_generales['Code régie']}")
+    resume_lines.append(f"**Professeur-organisateur** : {infos_generales['Professeur-organisateur']}")
+    resume_lines.append("")
+
     for item, data in st.session_state.resultats_checklist.items():
         if not data:
             resume_lines.append(f"{item} : N/A")
         else:
-            actifs = [k for k, v in data.items() if v]
-            if actifs:
-                resume_lines.append(f"{item} : {', '.join(actifs)}")
+            actifs = [k for k, v in data.items() if v and k != "dates"]
+            dates = data.get("dates", {})
+            lignes_item = []
+            if not actifs:
+                lignes_item.append("N/A")
             else:
-                resume_lines.append(f"{item} : N/A")
+                for statut in actifs:
+                    ligne = statut.replace("_", " ").capitalize()
+                    if statut in dates:
+                        ligne += f" (le {dates[statut]})"
+                    lignes_item.append(ligne)
+            resume_lines.append(f"{item} : {', '.join(lignes_item)}")
 
     # Ajout des items dynamiques
     for item_nom, item_details in st.session_state.items_additionnels:
