@@ -35,17 +35,17 @@ def export_resume_to_google_doc(resume_text: str, nom_fichier: str, infos_genera
             }
         })
 
-        # Informations générales (en gras)
-        for cle, valeur in reversed(list(infos_generales.items())):
-            valeur_affichee = valeur.strip()
-            if valeur_affichee:
-                ligne = f"{cle} : {valeur_affichee}\n"
+        # Résumé avec puces (extrait du texte résumé)
+        for ligne in reversed(resume_text.split("\n")):
+            if ligne.strip():
                 requests.insert(1, {
                     "insertText": {
                         "location": {"index": 1},
-                        "text": ligne
+                        "text": f"- {ligne.strip()}\n"
                     }
                 })
+
+        # Ligne vide pour séparation
         requests.insert(1, {
             "insertText": {
                 "location": {"index": 1},
@@ -53,12 +53,13 @@ def export_resume_to_google_doc(resume_text: str, nom_fichier: str, infos_genera
             }
         })
 
-        # Résumé avec puces
-        for ligne in reversed(resume_text.split("\n")):
+        # Infos générales (en haut du document)
+        for cle, valeur in reversed(list(infos_generales.items())):
+            ligne = f"{cle} : {valeur.strip()}\n"
             requests.insert(1, {
                 "insertText": {
                     "location": {"index": 1},
-                    "text": f"- {ligne}\n"
+                    "text": ligne
                 }
             })
 
