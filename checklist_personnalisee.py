@@ -17,20 +17,12 @@ def get_initial_item_state():
     }
 
 def app_generer_liste_verification(infos_generales_init, checklist_items):
-    st.header("1. Informations Générales du Voyage")
-
-    if "infos_generales" not in st.session_state:
-        st.session_state.infos_generales = infos_generales_init.copy()
-
-    for key in st.session_state.infos_generales:
-        st.session_state.infos_generales[key] = st.text_input(key, value=st.session_state.infos_generales[key])
+    st.header("2. Statut des Éléments de la Checklist")
 
     if "resultats_checklist" not in st.session_state:
         st.session_state.resultats_checklist = {
             item: get_initial_item_state() for item in checklist_items
         }
-
-    st.header("2. Statut des Éléments de la Checklist")
 
     for item in checklist_items:
         st.subheader(item)
@@ -82,6 +74,7 @@ def app_generer_liste_verification(infos_generales_init, checklist_items):
                 if "doc_a_envoyer" in data:
                     data["doc_a_envoyer"] = st.checkbox("Document à envoyer", value=data["doc_a_envoyer"], key=f"aenvoyer_{item}")
 
+    # Sauvegarde
     st.session_state.resultats_checklist.update({
         item: st.session_state.resultats_checklist[item] for item in checklist_items
     })
