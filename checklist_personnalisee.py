@@ -27,11 +27,7 @@ def app_generer_liste_verification():
     st.title("Générateur de Liste de Vérification pour Activité Scolaire")
     st.markdown("---")
 
-    # Informations générales du voyage
-    st.header("1. Informations Générales du Voyage")
-    intitule_voyage = st.text_input("Intitulé du voyage :", key="intitule_voyage")
-    code_regie = st.text_input("Code régie :", key="code_regie")
-    prof_org = st.text_input("Professeur-organisateur :", key="prof_org")
+   
     
     # Définir les éléments de la liste de vérification
     elements_checklist = [
