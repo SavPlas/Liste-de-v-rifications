@@ -3,7 +3,6 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-
 def get_google_services():
     # Authentification via secrets
     credentials_info = st.secrets["gdrive"]["gcp_service_account"]
@@ -16,7 +15,6 @@ def get_google_services():
     drive_service = build("drive", "v3", credentials=credentials)
     return docs_service, drive_service
 
-
 def export_resume_to_google_doc(resume_text: str, nom_fichier: str, infos_generales: dict) -> str:
     try:
         docs_service, drive_service = get_google_services()
@@ -26,21 +24,45 @@ def export_resume_to_google_doc(resume_text: str, nom_fichier: str, infos_genera
         doc = docs_service.documents().create(body={"title": doc_title}).execute()
         doc_id = doc.get("documentId")
 
-        # Créer le contenu du document
+        # Contenu formaté à insérer
         contenu = []
-        contenu.append({"insertText": {"location": {"index": 1}, "text": f"{doc_title}\n\n"}})
 
-        for cle, valeur in infos_generales.items():
-            contenu.append({"insertText": {"location": {"index": 1}, "text": f"{cle} : {valeur}\n"}})
-        contenu.append({"insertText": {"location": {"index": 1}, "text": "\n"}})
+        # Titre principal centré en gras
+        contenu.append({
+            "insertText": {
+                "location": {"index": 1},
+                "text": f"{doc_title}\n\n"
+            }
+        })
 
-        for ligne in resume_text.split("\n"):
-            contenu.append({"insertText": {"location": {"index": 1}, "text": f"- {ligne}\n"}})
+        # Ajouter les infos générales
+        for cle, valeur in reversed(list(infos_generales.items())):
+            contenu.insert(1, {
+                "insertText": {
+                    "location": {"index": 1},
+                    "text": f"{cle} : {valeur}\n"
+                }
+            })
+        contenu.insert(1, {
+            "insertText": {
+                "location": {"index": 1},
+                "text": "\n"
+            }
+        })
+
+        # Ajouter les lignes du résumé, une par section
+        for ligne in reversed(resume_text.split("\n")):
+            contenu.insert(1, {
+                "insertText": {
+                    "location": {"index": 1},
+                    "text": f"{ligne}\n"
+                }
+            })
 
         # Appliquer les mises à jour au document
-        docs_service.documents().batchUpdate(documentId=doc_id, body={"requests": list(reversed(contenu))}).execute()
+        docs_service.documents().batchUpdate(documentId=doc_id, body={"requests": contenu}).execute()
 
-        # Déplacer le document dans le dossier spécifié
+        # Déplacer le document dans le dossier cible sur Drive
         folder_id = st.secrets["gdrive"]["gdrive_folder_id"]
         file = drive_service.files().get(fileId=doc_id, fields='parents').execute()
         previous_parents = ",".join(file.get('parents'))
