@@ -36,7 +36,7 @@ if "resultats_checklist" in st.session_state:
 
     resume_text = "\n".join(resume_lines)
 
-    nom_fichier = st.text_input("Nom du fichier (sans extension) :", value="Résumé Voyage")
+    nom_fichier = st.text_input("Nom du fichier (sans extension) :", value="")
     if nom_fichier and st.button("Exporter vers Google Docs"):
         lien_doc = export_resume_to_google_doc(resume_text, nom_fichier, infos_generales)  # ✅ infos_generales ajoutées
         if lien_doc:
