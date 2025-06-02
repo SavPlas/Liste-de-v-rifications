@@ -5,15 +5,28 @@ from export_to_drive_function import export_resume_to_google_doc
 st.set_page_config(layout="centered")
 st.title("Générateur de Liste de Vérification pour Activité Scolaire")
 
-# 1. Informations générales
+# 1. Informations générales (centralisées ici)
+infos_generales_init = {
+    "Intitulé du voyage": "",
+    "Code régie": "",
+    "Professeur-organisateur": ""
+}
+
+checklist_items = [
+    "F1",
+    "Demande d'activité scolaire",
+    "Demande de résa TRAIN",
+    "CEC 5",
+    "CEC6bis",
+    "Accord CFWB",
+    "Office des étrangers : des étudiants de nationalité non-européenne ?",
+    "Assurance provinciale"
+]
+
 st.subheader("1. Informations Générales du Voyage")
 
 if "infos_generales" not in st.session_state:
-    st.session_state["infos_generales"] = {
-        "Intitulé du voyage": "",
-        "Code régie": "",
-        "Professeur-organisateur": ""
-    }
+    st.session_state["infos_generales"] = infos_generales_init.copy()
 
 infos = st.session_state["infos_generales"]
 infos["Intitulé du voyage"] = st.text_input("Intitulé du voyage", value=infos["Intitulé du voyage"], key="intitule_voyage_input")
@@ -22,7 +35,7 @@ infos["Professeur-organisateur"] = st.text_input("Professeur-organisateur", valu
 
 # 2. Checklist
 st.markdown("---")
-app_generer_liste_verification()
+app_generer_liste_verification(infos_generales_init, checklist_items)
 
 # 3. Résumé + export
 if "resume_checklist" in st.session_state:
