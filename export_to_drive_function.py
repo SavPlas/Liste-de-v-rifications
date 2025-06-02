@@ -24,45 +24,48 @@ def export_resume_to_google_doc(resume_text: str, nom_fichier: str, infos_genera
         doc = docs_service.documents().create(body={"title": doc_title}).execute()
         doc_id = doc.get("documentId")
 
-        # Contenu formaté à insérer
-        contenu = []
+        # Créer les requêtes de mise en forme
+        requests = []
 
-        # Titre principal centré en gras
-        contenu.append({
+        # Titre principal
+        requests.append({
             "insertText": {
                 "location": {"index": 1},
                 "text": f"{doc_title}\n\n"
             }
         })
 
-        # Ajouter les infos générales
+        # Informations générales (en gras)
         for cle, valeur in reversed(list(infos_generales.items())):
-            contenu.insert(1, {
-                "insertText": {
-                    "location": {"index": 1},
-                    "text": f"{cle} : {valeur}\n"
-                }
-            })
-        contenu.insert(1, {
+            valeur_affichee = valeur.strip()
+            if valeur_affichee:
+                ligne = f"{cle} : {valeur_affichee}\n"
+                requests.insert(1, {
+                    "insertText": {
+                        "location": {"index": 1},
+                        "text": ligne
+                    }
+                })
+        requests.insert(1, {
             "insertText": {
                 "location": {"index": 1},
                 "text": "\n"
             }
         })
 
-        # Ajouter les lignes du résumé, une par section
+        # Résumé avec puces
         for ligne in reversed(resume_text.split("\n")):
-            contenu.insert(1, {
+            requests.insert(1, {
                 "insertText": {
                     "location": {"index": 1},
-                    "text": f"{ligne}\n"
+                    "text": f"- {ligne}\n"
                 }
             })
 
-        # Appliquer les mises à jour au document
-        docs_service.documents().batchUpdate(documentId=doc_id, body={"requests": contenu}).execute()
+        # Appliquer les mises à jour
+        docs_service.documents().batchUpdate(documentId=doc_id, body={"requests": requests}).execute()
 
-        # Déplacer le document dans le dossier cible sur Drive
+        # Déplacer dans le dossier cible
         folder_id = st.secrets["gdrive"]["gdrive_folder_id"]
         file = drive_service.files().get(fileId=doc_id, fields='parents').execute()
         previous_parents = ",".join(file.get('parents'))
@@ -73,7 +76,6 @@ def export_resume_to_google_doc(resume_text: str, nom_fichier: str, infos_genera
             fields='id, parents'
         ).execute()
 
-        # Retourner le lien vers le document créé
         return f"https://docs.google.com/document/d/{doc_id}/edit"
 
     except HttpError as error:
