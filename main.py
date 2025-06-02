@@ -1,4 +1,5 @@
 import streamlit as st
+st.set_page_config(layout="centered")
 from checklist_personnalisee import app_generer_liste_verification
 from export_to_drive import export_resume_to_google_doc
 
