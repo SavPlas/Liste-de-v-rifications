@@ -35,13 +35,13 @@ def export_resume_to_google_doc(resume_text: str, nom_fichier: str, infos_genera
             }
         })
 
-        # Résumé avec puces (extrait du texte résumé)
+        # Texte brut fidèle au résumé Streamlit (pas de puces automatiques)
         for ligne in reversed(resume_text.split("\n")):
             if ligne.strip():
                 requests.insert(1, {
                     "insertText": {
                         "location": {"index": 1},
-                        "text": f"- {ligne.strip()}\n"
+                        "text": f"{ligne.strip()}\n"
                     }
                 })
 
@@ -53,8 +53,8 @@ def export_resume_to_google_doc(resume_text: str, nom_fichier: str, infos_genera
             }
         })
 
-        # Infos générales (en haut du document)
-        for cle, valeur in reversed(list(infos_generales.items())):
+        # Infos générales (en haut du document, dans l'ordre original)
+        for cle, valeur in infos_generales.items():
             ligne = f"{cle} : {valeur.strip()}\n"
             requests.insert(1, {
                 "insertText": {
