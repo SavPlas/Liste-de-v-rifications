@@ -4,13 +4,11 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 def get_google_services():
-    # Authentification via secrets
     credentials_info = st.secrets["gdrive"]["gcp_service_account"]
     credentials = service_account.Credentials.from_service_account_info(credentials_info, scopes=[
         "https://www.googleapis.com/auth/documents",
         "https://www.googleapis.com/auth/drive"
     ])
-
     docs_service = build("docs", "v1", credentials=credentials)
     drive_service = build("drive", "v3", credentials=credentials)
     return docs_service, drive_service
@@ -19,12 +17,10 @@ def export_resume_to_google_doc(resume_text: str, nom_fichier: str, infos_genera
     try:
         docs_service, drive_service = get_google_services()
 
-        # Créer un nouveau document
         doc_title = nom_fichier
         doc = docs_service.documents().create(body={"title": doc_title}).execute()
         doc_id = doc.get("documentId")
 
-        # Créer les requêtes de mise en forme
         requests = []
 
         # Titre principal
@@ -63,10 +59,8 @@ def export_resume_to_google_doc(resume_text: str, nom_fichier: str, infos_genera
                 }
             })
 
-        # Appliquer les mises à jour
         docs_service.documents().batchUpdate(documentId=doc_id, body={"requests": requests}).execute()
 
-        # Déplacer dans le dossier cible
         folder_id = st.secrets["gdrive"]["gdrive_folder_id"]
         file = drive_service.files().get(fileId=doc_id, fields='parents').execute()
         previous_parents = ",".join(file.get('parents'))
