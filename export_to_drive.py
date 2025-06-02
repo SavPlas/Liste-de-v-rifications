@@ -62,7 +62,7 @@ if "resultats_checklist" in st.session_state:
     st.subheader("Résumé généré")
     st.text_area("Contenu du résumé :", resume_text, height=300)
 
-    nom_fichier = st.text_input("Nom du fichier à exporter (sans extension) :", value=" ")
+    nom_fichier = st.text_input("Nom du fichier à exporter (sans extension) :", value="")
     if nom_fichier and st.button("Exporter vers Google Docs"):
         from export_to_drive_function import export_resume_to_google_doc  # <-- déplacé ici
         lien_doc = export_resume_to_google_doc(resume_text, nom_fichier, infos_generales)
