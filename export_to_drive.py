@@ -11,8 +11,7 @@ infos_generales = {
     "Professeur-organisateur": st.text_input("Professeur-organisateur", "CUISAL")
 }
 
-# Appel de la checklist
-app_generer_liste_verification()
+
 
 # Interface pour ajouter dynamiquement des items
 st.markdown("---")
