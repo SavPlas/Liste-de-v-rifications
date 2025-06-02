@@ -23,7 +23,7 @@ def get_initial_item_state():
 def app_generer_liste_verification():
     """Génère une liste de vérification interactive pour une activité scolaire avec Streamlit."""
 
-    st.set_page_config(layout="centered")
+    
     st.title("Générateur de Liste de Vérification pour Activité Scolaire")
     st.markdown("---")
 
