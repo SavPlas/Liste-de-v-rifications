@@ -1,8 +1,7 @@
 import streamlit as st
-
+st.set_page_config(layout="centered")
 
 from checklist_personnalisee import app_generer_liste_verification
-from export_to_drive import export_resume_to_google_doc
 
 # Informations générales (modifiable par l'utilisateur)
 infos_generales = {
@@ -65,6 +64,7 @@ if "resultats_checklist" in st.session_state:
 
     nom_fichier = st.text_input("Nom du fichier à exporter (sans extension) :", value="Résumé Voyage")
     if nom_fichier and st.button("Exporter vers Google Docs"):
+        from export_to_drive_function import export_resume_to_google_doc  # <-- déplacé ici
         lien_doc = export_resume_to_google_doc(resume_text, nom_fichier, infos_generales)
         if lien_doc:
             st.success(f"Document exporté : [Ouvrir dans Google Docs]({lien_doc})")
