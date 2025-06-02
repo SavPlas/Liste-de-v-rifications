@@ -16,30 +16,14 @@ def get_initial_item_state():
         "dates": {}
     }
 
-def app_generer_liste_verification():
+def app_generer_liste_verification(infos_generales_init, checklist_items):
     st.header("1. Informations Générales du Voyage")
 
     if "infos_generales" not in st.session_state:
-        st.session_state.infos_generales = {
-            "Intitulé du voyage": "",
-            "Code régie": "",
-            "Professeur-organisateur": ""
-        }
+        st.session_state.infos_generales = infos_generales_init.copy()
 
-    st.session_state.infos_generales["Intitulé du voyage"] = st.text_input("Intitulé du voyage", value=st.session_state.infos_generales["Intitulé du voyage"])
-    st.session_state.infos_generales["Code régie"] = st.text_input("Code régie", value=st.session_state.infos_generales["Code régie"])
-    st.session_state.infos_generales["Professeur-organisateur"] = st.text_input("Professeur-organisateur", value=st.session_state.infos_generales["Professeur-organisateur"])
-
-    checklist_items = [
-        "F1",
-        "Demande d'activité scolaire",
-        "Demande de résa TRAIN",
-        "CEC 5",
-        "CEC6bis",
-        "Accord CFWB",
-        "Office des étrangers : des étudiants de nationalité non-européenne ?",
-        "Assurance provinciale"
-    ]
+    for key in st.session_state.infos_generales:
+        st.session_state.infos_generales[key] = st.text_input(key, value=st.session_state.infos_generales[key])
 
     if "resultats_checklist" not in st.session_state:
         st.session_state.resultats_checklist = {
