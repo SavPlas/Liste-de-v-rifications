@@ -57,6 +57,17 @@ infos["Professeur-organisateur"] = st.text_input("Professeur-organisateur", valu
 # 2. Checklist dynamique
 st.markdown("---")
 app_generer_liste_verification(infos, st.session_state["checklist_items"])
+# Génération automatique du résumé après la checklist
+resume_lines = []
+resume_lines.append("### Informations Générales")
+for key, val in infos.items():
+    resume_lines.append(f"- **{key}** : {val or 'Non renseigné'}")
+
+resume_lines.append("\n### Statut de la Checklist")
+for item in st.session_state["checklist_items"]:
+    etat = st.session_state.get("resultats_checklist", {}).get(item, {})
+    statut = "N/A" if etat.get("n_a") else "Oui" if etat.get("oui") else "Non" if etat.get("non") else "Non renseigné"
+    resume_lines.append(f"- {item_
 
 
 # 3. Résumé + export
