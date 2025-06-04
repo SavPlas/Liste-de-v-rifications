@@ -1,6 +1,8 @@
 import streamlit as st
 from checklist_personnalisee import app_generer_liste_verification
 from export_to_drive_function import export_resume_to_google_doc
+import locale
+locale.setlocale(locale.LC_TIME, "fr_BE.UTF-8")  # ou "fr_FR.UTF-8" selon ton système
 
 st.set_page_config(layout="centered")
 st.title("Générateur de Liste de Vérification pour Activité Scolaire")
@@ -94,7 +96,18 @@ if nom_fichier_base and st.button("Exporter vers Google Docs"):
     tz = pytz.timezone("Europe/Brussels")
     now_be = datetime.now(tz)
 
-    jour = now_be.strftime("%A").capitalize()  # ex. Mercredi
+    jours_fr = {
+    "Monday": "Lundi",
+    "Tuesday": "Mardi",
+    "Wednesday": "Mercredi",
+    "Thursday": "Jeudi",
+    "Friday": "Vendredi",
+    "Saturday": "Samedi",
+    "Sunday": "Dimanche"
+    }
+    jour_en = now_be.strftime("%A")
+    jour = jours_fr.get(jour_en, jour_en)
+
     heure = now_be.hour
     moment = "matin" if heure < 12 else "après-midi"
 
@@ -104,5 +117,5 @@ if nom_fichier_base and st.button("Exporter vers Google Docs"):
     lien_doc = export_resume_to_google_doc(resume_text, nom_fichier_complet, infos)
     if lien_doc:
         st.success(f"✅ Document exporté : [Ouvrir dans Google Docs]({lien_doc})")
-
+    
 
