@@ -92,10 +92,17 @@ nom_fichier_base = st.text_input("Nom du fichier (base) à exporter :", value=""
 if nom_fichier_base and st.button("Exporter vers Google Docs"):
     # Ajout de l'horodatage belge
     tz = pytz.timezone("Europe/Brussels")
-    horodatage = datetime.now(tz).strftime("%Y-%m-%d_%Hh%M")
-    nom_fichier_complet = f"{nom_fichier_base}_{horodatage}"
+    now_be = datetime.now(tz)
+
+    jour = now_be.strftime("%A").capitalize()  # ex. Mercredi
+    heure = now_be.hour
+    moment = "matin" if heure < 12 else "après-midi"
+
+    horodatage = now_be.strftime("%Y-%m-%d %Hh%M")
+    nom_fichier_complet = f"{nom_fichier_base} - {horodatage} ({jour} {moment})"
 
     lien_doc = export_resume_to_google_doc(resume_text, nom_fichier_complet, infos)
     if lien_doc:
         st.success(f"✅ Document exporté : [Ouvrir dans Google Docs]({lien_doc})")
+
 
