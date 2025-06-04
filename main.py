@@ -61,13 +61,20 @@ app_generer_liste_verification(infos, st.session_state["checklist_items"])
 resume_lines = []
 resume_lines.append("### Informations Générales")
 for key, val in infos.items():
-    resume_lines.append(f"- **{key}** : {val or 'Non renseigné'}")
+    resume_lines.append(f"- **{key}** : {val if val else 'Non renseigné'}")
 
 resume_lines.append("\n### Statut de la Checklist")
 for item in st.session_state["checklist_items"]:
     etat = st.session_state.get("resultats_checklist", {}).get(item, {})
     statut = "N/A" if etat.get("n_a") else "Oui" if etat.get("oui") else "Non" if etat.get("non") else "Non renseigné"
-    resume_lines.append(f"- {item_
+    resume_lines.append(f"- {item} : {statut}")
+    if "dates" in etat:
+        for label, date in etat["dates"].items():
+            resume_lines.append(f"   - {label} : {date}")
+
+# Stocker le résumé dans la session
+st.session_state["resume_checklist"] = "\n".join(resume_lines)
+
 
 
 # 3. Résumé + export
