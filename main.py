@@ -84,8 +84,18 @@ if "resume_checklist" in st.session_state:
     st.subheader("Résumé de la Liste de Vérification")
     st.text_area("Contenu du résumé :", resume_text, height=300)
 
-    nom_fichier = st.text_input("Nom du fichier à exporter (sans extension) :", value="", key="nom_fichier_input")
-    if nom_fichier and st.button("Exporter vers Google Docs"):
-        lien_doc = export_resume_to_google_doc(resume_text, nom_fichier, infos)
-        if lien_doc:
-            st.success(f"✅ Document exporté : [Ouvrir dans Google Docs]({lien_doc})")
+    from datetime import datetime
+import pytz
+
+nom_fichier_base = st.text_input("Nom du fichier (base) à exporter :", value="", key="nom_fichier_input")
+
+if nom_fichier_base and st.button("Exporter vers Google Docs"):
+    # Ajout de l'horodatage belge
+    tz = pytz.timezone("Europe/Brussels")
+    horodatage = datetime.now(tz).strftime("%Y-%m-%d_%Hh%M")
+    nom_fichier_complet = f"{nom_fichier_base}_{horodatage}"
+
+    lien_doc = export_resume_to_google_doc(resume_text, nom_fichier_complet, infos)
+    if lien_doc:
+        st.success(f"✅ Document exporté : [Ouvrir dans Google Docs]({lien_doc})")
+
