@@ -84,7 +84,7 @@ if "resume_checklist" in st.session_state:
     st.subheader("Résumé de la Liste de Vérification")
     st.text_area("Contenu du résumé :", resume_text, height=300)
 
-    from datetime import datetime
+from datetime import datetime
 import pytz
 
 nom_fichier_base = st.text_input("Nom du fichier (base) à exporter :", value="", key="nom_fichier_input")
