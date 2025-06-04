@@ -17,53 +17,60 @@ def export_resume_to_google_doc(resume_text: str, nom_fichier: str, infos_genera
     try:
         docs_service, drive_service = get_google_services()
 
-        doc_title = nom_fichier
-        doc = docs_service.documents().create(body={"title": doc_title}).execute()
+        # 1. Créer le document
+        doc = docs_service.documents().create(body={"title": nom_fichier}).execute()
         doc_id = doc.get("documentId")
 
+        # 2. Préparer les requêtes dans l’ordre
         requests = []
 
-        # Titre principal
+        # Ajouter le titre du document (centré, mais ici simplement en haut)
         requests.append({
             "insertText": {
                 "location": {"index": 1},
-                "text": f"{doc_title}\n\n"
+                "text": f"{nom_fichier}\n\n"
             }
         })
 
-        # Texte brut fidèle au résumé Streamlit (pas de puces automatiques)
-        for ligne in reversed(resume_text.split("\n")):
-            if ligne.strip():
-                requests.insert(1, {
-                    "insertText": {
-                        "location": {"index": 1},
-                        "text": f"{ligne.strip()}\n"
-                    }
-                })
-
-        # Ligne vide pour séparation
-        requests.insert(1, {
-            "insertText": {
-                "location": {"index": 1},
-                "text": "\n"
-            }
-        })
-
-        # Infos générales (en haut du document, dans l'ordre original)
-        for cle, valeur in infos_generales.items():
-            ligne = f"{cle} : {valeur.strip()}\n"
-            requests.insert(1, {
+        # Ajouter les infos générales
+        for key, value in infos_generales.items():
+            ligne = f"{key} : {value.strip()}\n"
+            requests.append({
                 "insertText": {
                     "location": {"index": 1},
                     "text": ligne
                 }
             })
 
-        docs_service.documents().batchUpdate(documentId=doc_id, body={"requests": requests}).execute()
+        # Ajouter une ligne vide de séparation
+        requests.append({
+            "insertText": {
+                "location": {"index": 1},
+                "text": "\n"
+            }
+        })
 
+        # Ajouter le contenu du résumé ligne par ligne
+        for ligne in reversed(resume_text.split("\n")):
+            if ligne.strip():
+                requests.append({
+                    "insertText": {
+                        "location": {"index": 1},
+                        "text": f"{ligne.strip()}\n"
+                    }
+                })
+
+        # 3. Exécuter les requêtes (ordre inversé car index 1)
+        docs_service.documents().batchUpdate(
+            documentId=doc_id,
+            body={"requests": list(reversed(requests))}
+        ).execute()
+
+        # 4. Déplacer dans le bon dossier Drive
         folder_id = st.secrets["gdrive"]["gdrive_folder_id"]
         file = drive_service.files().get(fileId=doc_id, fields='parents').execute()
-        previous_parents = ",".join(file.get('parents'))
+        previous_parents = ",".join(file.get('parents', []))
+
         drive_service.files().update(
             fileId=doc_id,
             addParents=folder_id,
