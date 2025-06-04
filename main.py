@@ -58,6 +58,7 @@ infos["Professeur-organisateur"] = st.text_input("Professeur-organisateur", valu
 st.markdown("---")
 app_generer_liste_verification(infos, st.session_state["checklist_items"])
 
+
 # 3. Résumé + export
 if "resume_checklist" in st.session_state:
     resume_text = st.session_state["resume_checklist"]
