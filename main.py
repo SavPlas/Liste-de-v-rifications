@@ -2,7 +2,7 @@ import streamlit as st
 from checklist_personnalisee import app_generer_liste_verification
 from export_to_drive_function import export_resume_to_google_doc
 import locale
-locale.setlocale(locale.LC_TIME, "fr_BE.UTF-8")  # ou "fr_FR.UTF-8" selon ton système
+
 
 st.set_page_config(layout="centered")
 st.title("Générateur de Liste de Vérification pour Activité Scolaire")
