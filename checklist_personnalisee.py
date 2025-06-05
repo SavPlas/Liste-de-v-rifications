@@ -31,14 +31,12 @@ def app_generer_liste_verification(infos_generales_init, checklist_items):
 
         col1, col2, col3 = st.columns(3)
         with col1:
-            data["n_a"] = st.checkbox("N/A", value=data["n_a"], key=f"na_{item}")
+            data["n_a"] = st.checkbox("N/A", value=data.get("n_a", False), key=f"na_{item}")
         if not data["n_a"]:
             with col2:
-                data["oui"] = st.checkbox("Oui", value=data["oui"], key=f"oui_{item}")
+                data["oui"] = st.checkbox("Oui", value=data.get("oui", False), key=f"oui_{item}")
             with col3:
-                data["non"] = st.checkbox("Non", value=data["non"], key=f"non_{item}")
-
-            if data["oui"]:
+                data["non"] = st.checkbox("Non", value=data.get("non", False), key=f"non_{item}")
                 if "signe_lpeth" in data:
                     data["signe_lpeth"] = st.checkbox("Signé LPETH", value=data["signe_lpeth"], key=f"signe_{item}")
                     if data["signe_lpeth"]:
