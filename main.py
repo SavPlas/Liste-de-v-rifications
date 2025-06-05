@@ -26,6 +26,18 @@ if "infos_generales" not in st.session_state:
         "Code régie": "",
         "Professeur-organisateur": ""
     }
+import json
+
+if st.button("🔁 Charger un exemple de checklist remplie (simulation)"):
+    try:
+        with open("exemple_checklist.json", "r", encoding="utf-8") as f:
+            simulation_data = json.load(f)
+            st.session_state["infos_generales"] = simulation_data["infos_generales"]
+            st.session_state["checklist_items"] = simulation_data["checklist_items"]
+            st.session_state["resultats_checklist"] = simulation_data["resultats_checklist"]
+            st.success("✅ Simulation chargée avec succès !")
+    except Exception as e:
+        st.error(f"Erreur lors du chargement de la simulation : {e}")
 
 # ➕ Ajouter un nouvel item
 st.markdown("---")
