@@ -26,7 +26,8 @@ def app_generer_liste_verification(infos_generales_init, checklist_items):
 
     for item in checklist_items:
         st.subheader(item)
-        data = st.session_state.resultats_checklist[item]
+        data = st.session_state.get("resultats_checklist", {}).get(item, {})
+
 
         col1, col2, col3 = st.columns(3)
         with col1:
