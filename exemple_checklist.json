@@ -1,0 +1,34 @@
+{
+  "infos_generales": {
+    "Intitulé du voyage": "Voyage à Paris",
+    "Code régie": "ABC123",
+    "Professeur-organisateur": "Mme Dupont"
+  },
+  "checklist_items": [
+    "F1",
+    "Demande d'activité scolaire",
+    "Demande de résa TRAIN"
+  ],
+  "resultats_checklist": {
+    "F1": {
+      "oui": true,
+      "non": false,
+      "n_a": false,
+      "dates": {
+        "Envoyé à la Régie": "01-06-2025"
+      }
+    },
+    "Demande d'activité scolaire": {
+      "oui": false,
+      "non": false,
+      "n_a": true,
+      "dates": {}
+    },
+    "Demande de résa TRAIN": {
+      "oui": false,
+      "non": true,
+      "n_a": false,
+      "dates": {}
+    }
+  }
+}
