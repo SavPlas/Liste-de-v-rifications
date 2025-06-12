@@ -17,7 +17,9 @@ if "checklist_items" not in st.session_state:
         "CEC6bis",
         "Accord CFWB",
         "Office des étrangers : des étudiants de nationalité non-européenne ?",
-        "Assurance provinciale"
+        "Assurance provinciale",
+        "Plan de paiement",
+        "Désistement/Remplacement"
     ]
 
 if "infos_generales" not in st.session_state:
