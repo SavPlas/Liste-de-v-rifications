@@ -7,7 +7,9 @@
   "checklist_items": [
     "F1",
     "Demande d'activité scolaire",
-    "Demande de résa TRAIN"
+    "Demande de résa TRAIN",
+    "Plan de paiement",
+    "Désistement/Remplacement"
   ],
   "resultats_checklist": {
     "F1": {
@@ -28,6 +30,20 @@
       "oui": false,
       "non": true,
       "n_a": false,
+      "dates": {}
+    },
+    "Plan de paiement": {
+      "oui": true,
+      "non": false,
+      "n_a": false,
+      "dates": {
+        "Plan transmis": "03-06-2025"
+      }
+    },
+    "Désistement/Remplacement": {
+      "oui": false,
+      "non": false,
+      "n_a": true,
       "dates": {}
     }
   }
